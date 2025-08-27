@@ -45,25 +45,30 @@ export function CustomizerTool() {
     ctx.drawImage(img, 0, 0);
   }, [brightness, contrast, saturation, hue]);
 
+  const loadImage = useCallback((imageSrc: string) => {
+    const img = new Image();
+    img.onload = () => {
+      originalImageRef.current = img;
+      applyFilters();
+    };
+    img.onerror = (error) => {
+      console.error("Error loading image:", error);
+    };
+    img.crossOrigin = "anonymous";
+    img.src = imageSrc;
+  }, [applyFilters]);
+
   const handleFileUpload = useCallback((file: File) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
         setUploadedImage(result);
-        
-        // Load image for canvas processing
-        const img = new Image();
-        img.onload = () => {
-          originalImageRef.current = img;
-          applyFilters();
-        };
-        img.crossOrigin = "anonymous";
-        img.src = result;
+        loadImage(result);
       };
       reader.readAsDataURL(file);
     }
-  }, [applyFilters]);
+  }, [loadImage]);
 
   // Apply filters whenever settings change
   useEffect(() => {
@@ -123,6 +128,7 @@ export function CustomizerTool() {
   const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
     if (result.successful.length > 0) {
       const uploadURL = result.successful[0].uploadURL as string;
+      console.log("Upload completed, URL:", uploadURL);
       setUploadedImage(uploadURL);
       loadImage(uploadURL);
     }
@@ -365,14 +371,18 @@ export function CustomizerTool() {
                         data-testid="processed-image"
                         style={{ display: originalImageRef.current ? 'block' : 'none' }}
                       />
-                      {!originalImageRef.current && (
-                        <img 
-                          src={uploadedImage} 
-                          alt="Loading..." 
-                          className="w-full h-auto max-h-96 object-contain opacity-50"
-                          data-testid="loading-image"
-                        />
-                      )}
+                      <img 
+                        src={uploadedImage} 
+                        alt="Uploaded car" 
+                        className={`w-full h-auto max-h-96 object-contain ${originalImageRef.current ? 'hidden' : 'block'}`}
+                        data-testid="fallback-image"
+                        onLoad={() => {
+                          // Trigger filter application when fallback image loads
+                          if (!originalImageRef.current) {
+                            loadImage(uploadedImage);
+                          }
+                        }}
+                      />
                       
                       {/* Decor Style Overlay */}
                       {decorStyle && (
