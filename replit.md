@@ -8,6 +8,11 @@ CarTunez is a modern car customization and styling company website built with a 
 - Integrated quick color preset system for instant theme changes
 - Implemented canvas-based image processing with downloadable results
 - Enhanced customizer tool with live preview functionality
+- Integrated professional object storage with Google Cloud Storage backend
+- Added dual upload options: cloud storage and local file selection
+- Fixed API request functionality for seamless file uploads
+- Integrated actual CarTunez logo throughout the website
+- Completed professional car configurator matching Zeno platform functionality
 
 # User Preferences
 
