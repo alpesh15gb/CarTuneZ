@@ -17,6 +17,8 @@ export function CustomizerTool() {
   const [saturation, setSaturation] = useState([100]);
   const [hue, setHue] = useState([0]);
   const [colorSensitivity, setColorSensitivity] = useState([50]); // Controls how selective the color detection is
+  const [targetColor, setTargetColor] = useState<{r: number, g: number, b: number} | null>(null);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropAreaRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -59,24 +61,38 @@ export function CustomizerTool() {
       // Convert to HSL for better color manipulation
       const [h, s, l] = rgbToHsl(r, g, b);
       
-      // Simplified car body color detection (fast and efficient)
-      const sensitivity = colorSensitivity[0] / 100;
+      // Target-specific color detection
+      let isCarColor = false;
       
-      // Quick exclusions for obvious non-car surfaces
-      const isObviouslyNotCar = 
-        l > 0.9 || // Pure white (reflections, sky)
-        l < 0.05 || // Pure black (shadows, tires)
-        (s < 0.05 && l > 0.7) || // Very bright neutral (chrome, mirrors)
-        (y < canvas.height * 0.3 && x < canvas.width * 0.2 && l > 0.5) || // Top-left mirror area
-        (y < canvas.height * 0.3 && x > canvas.width * 0.8 && l > 0.5); // Top-right mirror area
-      
-      // Simple car paint detection
-      const isCarColor = !isObviouslyNotCar && (
-        // Any color with moderate saturation and lightness
-        (s > 0.1 * sensitivity && l > 0.15 && l < 0.8) ||
-        // Dark colors (including metallics)
-        (l > 0.1 && l < 0.4 && s > 0.02 * sensitivity)
-      );
+      if (targetColor) {
+        // Convert target color to HSL
+        const [targetH, targetS, targetL] = rgbToHsl(targetColor.r, targetColor.g, targetColor.b);
+        const sensitivity = colorSensitivity[0] / 100;
+        
+        // Calculate color similarity with enhanced tolerance
+        const hDiff = Math.min(Math.abs(h - targetH), 1 - Math.abs(h - targetH)); // Handle hue wraparound
+        const sDiff = Math.abs(s - targetS);
+        const lDiff = Math.abs(l - targetL);
+        
+        // More lenient matching for car colors
+        const hTolerance = 0.15 * sensitivity; // Hue tolerance
+        const sTolerance = 0.3 * sensitivity;  // Saturation tolerance
+        const lTolerance = 0.25 * sensitivity; // Lightness tolerance
+        
+        isCarColor = hDiff < hTolerance && sDiff < sTolerance && lDiff < lTolerance;
+      } else {
+        // Fallback: broad car paint detection when no target selected
+        const sensitivity = colorSensitivity[0] / 100;
+        const isObviouslyNotCar = 
+          l > 0.85 || l < 0.1 || // Extreme brightness
+          (s < 0.08 && l > 0.65) || // Chrome/mirrors
+          (y < canvas.height * 0.25 && (x < canvas.width * 0.2 || x > canvas.width * 0.8)); // Mirror positions
+        
+        isCarColor = !isObviouslyNotCar && (
+          (s > 0.12 * sensitivity && l > 0.2 && l < 0.75) || // Colored paints
+          (l > 0.15 && l < 0.45 && s > 0.05 * sensitivity) // Dark metallics
+        );
+      }
 
       if (isCarColor) {
         // Apply enhanced color modifications
@@ -98,7 +114,7 @@ export function CustomizerTool() {
 
     // Apply the modified image data back to canvas
     ctx.putImageData(imageData, 0, 0);
-  }, [brightness, contrast, saturation, hue, colorSensitivity]);
+  }, [brightness, contrast, saturation, hue, colorSensitivity, targetColor]);
 
   // RGB to HSL conversion
   const rgbToHsl = (r: number, g: number, b: number): [number, number, number] => {
@@ -182,7 +198,35 @@ export function CustomizerTool() {
     if (uploadedImage && originalImageRef.current) {
       applyFilters();
     }
-  }, [brightness, contrast, saturation, hue, colorSensitivity, applyFilters]);
+  }, [brightness, contrast, saturation, hue, colorSensitivity, targetColor, applyFilters]);
+
+  // Handle canvas click to select target color
+  const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current || !originalImageRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = Math.floor((e.clientX - rect.left) * scaleX);
+    const y = Math.floor((e.clientY - rect.top) * scaleY);
+    
+    // Get the original image data (not the modified canvas)
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    if (!tempCtx) return;
+    
+    tempCanvas.width = originalImageRef.current.width;
+    tempCanvas.height = originalImageRef.current.height;
+    tempCtx.drawImage(originalImageRef.current, 0, 0);
+    
+    const imageData = tempCtx.getImageData(x, y, 1, 1);
+    const [r, g, b] = imageData.data;
+    
+    setTargetColor({ r, g, b });
+    setShowColorPicker(true);
+  }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -260,6 +304,8 @@ export function CustomizerTool() {
     setSaturation([100]);
     setHue([0]);
     setColorSensitivity([50]);
+    setTargetColor(null);
+    setShowColorPicker(false);
   };
 
   const downloadImage = () => {
@@ -508,10 +554,34 @@ export function CustomizerTool() {
                 <div className="relative rounded-lg overflow-hidden bg-secondary" data-testid="preview-area">
                   {uploadedImage ? (
                     <div className="relative">
+                      {/* Color Selection Instructions */}
+                      <div className="absolute top-2 left-2 z-10 bg-black/80 text-white px-3 py-1 rounded-full text-xs">
+                        💡 Click to select car area
+                      </div>
+                      
+                      {/* Target Color Display */}
+                      {targetColor && (
+                        <div className="absolute top-2 right-2 z-10 flex items-center gap-2 bg-black/80 text-white px-3 py-1 rounded-full">
+                          <div 
+                            className="w-4 h-4 rounded-full border border-white/50"
+                            style={{ backgroundColor: `rgb(${targetColor.r}, ${targetColor.g}, ${targetColor.b})` }}
+                          />
+                          <span className="text-xs">Target Selected</span>
+                          <button
+                            onClick={() => { setTargetColor(null); setShowColorPicker(false); }}
+                            className="ml-1 text-white/70 hover:text-white text-xs"
+                            data-testid="button-clear-target"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                      
                       <canvas
                         ref={canvasRef}
-                        className="w-full h-auto max-h-96 object-contain"
+                        className="w-full h-auto max-h-96 object-contain cursor-crosshair"
                         data-testid="processed-image"
+                        onClick={handleCanvasClick}
                         style={{ display: originalImageRef.current ? 'block' : 'none' }}
                       />
                       <img 
@@ -554,7 +624,9 @@ export function CustomizerTool() {
                       <div>Contrast: {contrast[0]}%</div>
                       <div>Saturation: {saturation[0]}%</div>
                       <div>Detection: {colorSensitivity[0]}%</div>
-                      <div>Status: Smart Detection</div>
+                      <div className={targetColor ? "text-green-400 font-medium" : ""}>
+                        {targetColor ? "🎯 Targeted Mode" : "🔍 General Mode"}
+                      </div>
                     </div>
                   </div>
                 )}
