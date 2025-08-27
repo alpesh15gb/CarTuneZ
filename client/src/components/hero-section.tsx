@@ -17,7 +17,6 @@ export function HeroSection() {
         <video 
           src="/hero-video.mp4"
           autoPlay
-          loop
           muted
           playsInline
           className="w-full h-full object-cover"
