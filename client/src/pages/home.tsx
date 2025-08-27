@@ -1,6 +1,6 @@
 import { Navigation } from "@/components/navigation";
 import { HeroSection } from "@/components/hero-section";
-import { ThreeCarCustomizer } from "@/components/three-car-customizer";
+import { SimpleCarCustomizer } from "@/components/simple-car-customizer";
 import { BeforeAfterShowcase } from "@/components/before-after-slider";
 import { ServicesSection } from "@/components/services-section";
 import { GallerySection } from "@/components/gallery-section";
@@ -24,7 +24,7 @@ export default function Home() {
               Choose colors, adjust materials, and see your dream car come to life instantly.
             </p>
           </div>
-          <ThreeCarCustomizer />
+          <SimpleCarCustomizer />
         </div>
       </section>
       <BeforeAfterShowcase />

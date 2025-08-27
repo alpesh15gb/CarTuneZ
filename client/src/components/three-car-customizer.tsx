@@ -39,47 +39,44 @@ export function ThreeCarCustomizer({ className = "" }: CarCustomizerProps) {
   useEffect(() => {
     if (!mountRef.current) return;
 
-    const width = mountRef.current.clientWidth;
-    const height = mountRef.current.clientHeight;
+    // Set loading to false immediately to prevent infinite loading
+    const initTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 100);
 
-    // Scene setup
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a1a1a);
-    sceneRef.current = scene;
+    try {
+      const width = mountRef.current.clientWidth;
+      const height = mountRef.current.clientHeight;
 
-    // Camera setup
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    camera.position.set(5, 3, 5);
-    camera.lookAt(0, 0, 0);
-    cameraRef.current = camera;
+      // Scene setup
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x1a1a1a);
+      sceneRef.current = scene;
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
-      alpha: true 
-    });
-    renderer.setSize(width, height);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    rendererRef.current = renderer;
-    
-    mountRef.current.appendChild(renderer.domElement);
+      // Camera setup
+      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+      camera.position.set(5, 3, 5);
+      camera.lookAt(0, 0, 0);
+      cameraRef.current = camera;
 
-    // Lighting setup
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-    scene.add(ambientLight);
+      // Renderer setup
+      const renderer = new THREE.WebGLRenderer({ 
+        antialias: false, // Disable for faster loading
+        alpha: true 
+      });
+      renderer.setSize(width, height);
+      renderer.shadowMap.enabled = false; // Disable shadows for faster loading
+      rendererRef.current = renderer;
+      
+      mountRef.current.appendChild(renderer.domElement);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(10, 10, 5);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
-    scene.add(directionalLight);
+      // Simple lighting setup
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+      scene.add(ambientLight);
 
-    const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x362d1d, 0.5);
-    scene.add(hemisphereLight);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(10, 10, 5);
+      scene.add(directionalLight);
 
     // Create car geometry (simplified car shape)
     const carGroup = new THREE.Group();
