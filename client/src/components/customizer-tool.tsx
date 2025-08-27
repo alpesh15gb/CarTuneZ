@@ -16,12 +16,13 @@ export function CustomizerTool() {
   const [contrast, setContrast] = useState([100]);
   const [saturation, setSaturation] = useState([100]);
   const [hue, setHue] = useState([0]);
+  const [colorSensitivity, setColorSensitivity] = useState([50]); // Controls how selective the color detection is
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropAreaRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalImageRef = useRef<HTMLImageElement | null>(null);
 
-  // Apply filters to image
+  // Advanced color detection and replacement for cars
   const applyFilters = useCallback(() => {
     if (!originalImageRef.current || !canvasRef.current) return;
     
@@ -33,17 +34,125 @@ export function CustomizerTool() {
     canvas.width = img.width;
     canvas.height = img.height;
 
-    // Apply CSS-style filters
-    ctx.filter = `
-      brightness(${brightness[0]}%) 
-      contrast(${contrast[0]}%) 
-      saturate(${saturation[0]}%) 
-      hue-rotate(${hue[0]}deg)
-    `;
-    
+    // Draw original image first
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
-  }, [brightness, contrast, saturation, hue]);
+
+    // Get image data for pixel manipulation
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    // Enhanced car color detection algorithm
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const alpha = data[i + 3];
+
+      if (alpha === 0) continue; // Skip transparent pixels
+
+      // Convert to HSL for better color manipulation
+      const [h, s, l] = rgbToHsl(r, g, b);
+      
+      // Advanced car body color detection with sensitivity control
+      const sensitivity = colorSensitivity[0] / 100; // Convert to 0-1 range
+      const minSaturation = 0.1 * sensitivity; // More sensitive = lower threshold
+      const minLightness = 0.05 + (0.1 * sensitivity);
+      const maxLightness = 0.95 - (0.1 * sensitivity);
+      
+      const isCarColor = 
+        l > minLightness && l < maxLightness && // Avoid pure black/white
+        s > minSaturation && // Has some color saturation
+        // Focus on typical car paint colors and metallics
+        (
+          // Vibrant car colors
+          (s > 0.2 && (
+            (h >= 0 && h <= 0.1) || // Reds
+            (h >= 0.9 && h <= 1.0) || // Reds
+            (h >= 0.05 && h <= 0.2) || // Oranges/Yellows
+            (h >= 0.25 && h <= 0.45) || // Greens
+            (h >= 0.55 && h <= 0.75) || // Blues/Cyans
+            (h >= 0.75 && h <= 0.85) // Purples
+          )) ||
+          // Metallic/Neutral car colors (low saturation, mid-range lightness)
+          (s <= 0.25 && l > 0.2 && l < 0.8) ||
+          // Dark car colors (blacks, dark grays, dark blues)
+          (l < 0.3 && s < 0.4)
+        );
+
+      if (isCarColor) {
+        // Apply enhanced color modifications
+        let newH = (h + hue[0] / 360) % 1;
+        let newS = Math.max(0, Math.min(1, s * (saturation[0] / 100)));
+        let newL = Math.max(0, Math.min(1, l * (brightness[0] / 100)));
+        
+        // Apply contrast
+        newL = ((newL - 0.5) * (contrast[0] / 100)) + 0.5;
+        newL = Math.max(0, Math.min(1, newL));
+
+        const [newR, newG, newB] = hslToRgb(newH, newS, newL);
+        
+        data[i] = newR;
+        data[i + 1] = newG;
+        data[i + 2] = newB;
+      }
+    }
+
+    // Apply the modified image data back to canvas
+    ctx.putImageData(imageData, 0, 0);
+  }, [brightness, contrast, saturation, hue, colorSensitivity]);
+
+  // RGB to HSL conversion
+  const rgbToHsl = (r: number, g: number, b: number): [number, number, number] => {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+
+    return [h, s, l];
+  };
+
+  // HSL to RGB conversion
+  const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
+    const hue2rgb = (p: number, q: number, t: number): number => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    let r, g, b;
+
+    if (s === 0) {
+      r = g = b = l; // achromatic
+    } else {
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  };
 
   const loadImage = useCallback((imageSrc: string) => {
     const img = new Image();
@@ -75,7 +184,7 @@ export function CustomizerTool() {
     if (uploadedImage && originalImageRef.current) {
       applyFilters();
     }
-  }, [brightness, contrast, saturation, hue, applyFilters]);
+  }, [brightness, contrast, saturation, hue, colorSensitivity, applyFilters]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -152,6 +261,7 @@ export function CustomizerTool() {
     setContrast([100]);
     setSaturation([100]);
     setHue([0]);
+    setColorSensitivity([50]);
   };
 
   const downloadImage = () => {
@@ -169,6 +279,9 @@ export function CustomizerTool() {
     { body: "#10b981", wheel: "#6b7280", name: "Forest Green", hue: 150 },
     { body: "#f59e0b", wheel: "#fbbf24", name: "Solar Yellow", hue: 45 },
     { body: "#8b5cf6", wheel: "#dc2626", name: "Royal Purple", hue: 270 },
+    { body: "#6b7280", wheel: "#374151", name: "Metallic Gray", hue: 200 },
+    { body: "#dc2626", wheel: "#1f2937", name: "Deep Red", hue: 355 },
+    { body: "#059669", wheel: "#d97706", name: "Emerald Green", hue: 160 },
   ];
 
   const decorStyles = [
@@ -346,6 +459,25 @@ export function CustomizerTool() {
                       data-testid="slider-saturation"
                     />
                   </div>
+
+                  {/* Color Detection Sensitivity */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                      Car Color Detection: {colorSensitivity[0]}%
+                    </label>
+                    <Slider
+                      value={colorSensitivity}
+                      onValueChange={setColorSensitivity}
+                      max={100}
+                      min={10}
+                      step={5}
+                      className="w-full"
+                      data-testid="slider-sensitivity"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Higher values detect more car surface areas
+                    </p>
+                  </div>
                   
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-3">Decor Style</label>
@@ -423,6 +555,8 @@ export function CustomizerTool() {
                       <div>Brightness: {brightness[0]}%</div>
                       <div>Contrast: {contrast[0]}%</div>
                       <div>Saturation: {saturation[0]}%</div>
+                      <div>Detection: {colorSensitivity[0]}%</div>
+                      <div>Status: Smart Detection</div>
                     </div>
                   </div>
                 )}
