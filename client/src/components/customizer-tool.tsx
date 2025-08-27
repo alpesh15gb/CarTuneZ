@@ -129,8 +129,21 @@ export function CustomizerTool() {
     if (result.successful.length > 0) {
       const uploadURL = result.successful[0].uploadURL as string;
       console.log("Upload completed, URL:", uploadURL);
-      setUploadedImage(uploadURL);
-      loadImage(uploadURL);
+      
+      // Convert Google Cloud Storage URL to our server endpoint
+      // From: https://storage.googleapis.com/bucket-name/.private/uploads/id
+      // To: /objects/uploads/id
+      const urlParts = uploadURL.split('/.private/');
+      if (urlParts.length === 2) {
+        const objectPath = `/objects/${urlParts[1]}`;
+        console.log("Converted object path:", objectPath);
+        setUploadedImage(objectPath);
+        loadImage(objectPath);
+      } else {
+        // Fallback: use the original URL
+        setUploadedImage(uploadURL);
+        loadImage(uploadURL);
+      }
     }
   };
 
