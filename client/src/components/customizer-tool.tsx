@@ -41,6 +41,45 @@ export function CustomizerTool() {
     // Get image data for pixel manipulation
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
+    
+    // Helper function to check if a pixel area looks like a reflection
+    const isLikelyReflection = (x: number, y: number): boolean => {
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      // Check surrounding pixels for high contrast variations (typical of reflections)
+      let highContrastCount = 0;
+      const checkRadius = 2;
+      
+      for (let dy = -checkRadius; dy <= checkRadius; dy++) {
+        for (let dx = -checkRadius; dx <= checkRadius; dx++) {
+          const nx = x + dx;
+          const ny = y + dy;
+          
+          if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            const idx = (ny * width + nx) * 4;
+            const neighborR = data[idx];
+            const neighborG = data[idx + 1];
+            const neighborB = data[idx + 2];
+            const [nh, ns, nl] = rgbToHsl(neighborR, neighborG, neighborB);
+            
+            // Current pixel
+            const currentIdx = (y * width + x) * 4;
+            const currentR = data[currentIdx];
+            const currentG = data[currentIdx + 1];
+            const currentB = data[currentIdx + 2];
+            const [ch, cs, cl] = rgbToHsl(currentR, currentG, currentB);
+            
+            // Check for high lightness difference (reflections have sharp transitions)
+            if (Math.abs(nl - cl) > 0.3) {
+              highContrastCount++;
+            }
+          }
+        }
+      }
+      
+      return highContrastCount > 3; // More than 3 high contrast neighbors suggests reflection
+    };
 
     // Enhanced car color detection algorithm
     for (let i = 0; i < data.length; i += 4) {
@@ -51,33 +90,58 @@ export function CustomizerTool() {
 
       if (alpha === 0) continue; // Skip transparent pixels
 
+      // Calculate pixel coordinates for reflection detection
+      const pixelIndex = i / 4;
+      const x = pixelIndex % canvas.width;
+      const y = Math.floor(pixelIndex / canvas.width);
+
       // Convert to HSL for better color manipulation
       const [h, s, l] = rgbToHsl(r, g, b);
       
-      // Advanced car body color detection with sensitivity control
-      const sensitivity = colorSensitivity[0] / 100; // Convert to 0-1 range
-      const minSaturation = 0.1 * sensitivity; // More sensitive = lower threshold
-      const minLightness = 0.05 + (0.1 * sensitivity);
-      const maxLightness = 0.95 - (0.1 * sensitivity);
+      // Skip if this looks like a reflection area
+      if (isLikelyReflection(x, y)) continue;
+      
+      // Advanced car body color detection - exclude mirrors, glass, and chrome
+      const sensitivity = colorSensitivity[0] / 100;
+      
+      // Exclude highly reflective surfaces (mirrors, chrome, glass)
+      const isReflectiveSurface = 
+        (l > 0.8 && s < 0.2) || // Very bright, low saturation (mirrors, chrome)
+        (l < 0.1 && s < 0.15) || // Very dark reflective surfaces
+        (s < 0.08 && l > 0.65); // Near-white reflective surfaces
+        
+      // Exclude typical window/glass colors (dark with blue tint)
+      const isGlass = 
+        (l < 0.3 && h >= 0.45 && h <= 0.75 && s > 0.08) || // Dark blue-tinted glass
+        (l < 0.25 && s < 0.15); // Very dark glass
+      
+      // Exclude mirrors based on position (side mirrors are typically in upper regions)
+      const isPossibleMirror = 
+        (y < canvas.height * 0.4 && // Upper portion of image
+         (x < canvas.width * 0.25 || x > canvas.width * 0.75) && // Side areas
+         (l > 0.4 || (s < 0.2 && l > 0.2))); // Bright or neutral colored
       
       const isCarColor = 
-        l > minLightness && l < maxLightness && // Avoid pure black/white
-        s > minSaturation && // Has some color saturation
-        // Focus on typical car paint colors and metallics
+        !isReflectiveSurface && 
+        !isGlass &&
+        !isPossibleMirror &&
+        l > 0.1 && l < 0.85 && // Reasonable lightness range
+        // Car paint detection with sensitivity
         (
-          // Vibrant car colors
-          (s > 0.2 && (
-            (h >= 0 && h <= 0.1) || // Reds
-            (h >= 0.9 && h <= 1.0) || // Reds
-            (h >= 0.05 && h <= 0.2) || // Oranges/Yellows
+          // Vibrant car paints (higher saturation)
+          (s > (0.15 + 0.1 * sensitivity) && (
+            (h >= 0 && h <= 0.08) || // Reds
+            (h >= 0.92 && h <= 1.0) || // Reds
+            (h >= 0.08 && h <= 0.17) || // Oranges
+            (h >= 0.17 && h <= 0.25) || // Yellows
             (h >= 0.25 && h <= 0.45) || // Greens
-            (h >= 0.55 && h <= 0.75) || // Blues/Cyans
-            (h >= 0.75 && h <= 0.85) // Purples
+            (h >= 0.55 && h <= 0.7) || // Blues
+            (h >= 0.75 && h <= 0.85) // Purples/Magentas
           )) ||
-          // Metallic/Neutral car colors (low saturation, mid-range lightness)
-          (s <= 0.25 && l > 0.2 && l < 0.8) ||
-          // Dark car colors (blacks, dark grays, dark blues)
-          (l < 0.3 && s < 0.4)
+          // Matte/Metallic car colors (moderate saturation, avoid pure grays)
+          (s > (0.08 * sensitivity) && s <= 0.3 && l > 0.25 && l < 0.75) ||
+          // Dark car colors (black, dark gray, but not pure black)
+          (l > 0.08 && l < 0.35 && s > (0.03 * sensitivity) && s < 0.25)
         );
 
       if (isCarColor) {
@@ -235,7 +299,7 @@ export function CustomizerTool() {
   };
 
   const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
-    if (result.successful.length > 0) {
+    if (result.successful && result.successful.length > 0) {
       const uploadURL = result.successful[0].uploadURL as string;
       console.log("Upload completed, URL:", uploadURL);
       
@@ -463,7 +527,7 @@ export function CustomizerTool() {
                   {/* Color Detection Sensitivity */}
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-3">
-                      Car Color Detection: {colorSensitivity[0]}%
+                      Paint Detection: {colorSensitivity[0]}%
                     </label>
                     <Slider
                       value={colorSensitivity}
@@ -475,7 +539,7 @@ export function CustomizerTool() {
                       data-testid="slider-sensitivity"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      Higher values detect more car surface areas
+                      Lower = Only main body paint | Higher = Include trim details
                     </p>
                   </div>
                   
