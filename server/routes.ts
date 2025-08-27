@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission endpoint
@@ -52,27 +53,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Image upload endpoint for the customizer tool
-  app.post("/api/upload-car-image", async (req, res) => {
+  // Serve public assets from object storage
+  app.get("/public-objects/:filePath(*)", async (req, res) => {
+    const filePath = req.params.filePath;
+    const objectStorageService = new ObjectStorageService();
     try {
-      // In a real application, you would:
-      // 1. Validate the uploaded image
-      // 2. Process/resize the image as needed
-      // 3. Save to cloud storage (AWS S3, Cloudinary, etc.)
-      // 4. Return the image URL for frontend use
-
-      res.status(200).json({
-        success: true,
-        message: "Image uploaded successfully",
-        imageUrl: "/placeholder-car-image.jpg"
-      });
-
+      const file = await objectStorageService.searchPublicObject(filePath);
+      if (!file) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      objectStorageService.downloadObject(file, res);
     } catch (error) {
-      console.error("Image upload error:", error);
-      res.status(500).json({
-        error: "Failed to upload image"
-      });
+      console.error("Error searching for public object:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
+  });
+
+  // Get upload URL for object storage
+  app.post("/api/objects/upload", async (req, res) => {
+    const objectStorageService = new ObjectStorageService();
+    const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+    res.json({ uploadURL });
   });
 
   // Gallery images endpoint

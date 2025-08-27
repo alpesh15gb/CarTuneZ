@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Upload, Download, Share2, RotateCcw } from "lucide-react";
+import { ObjectUploader } from "@/components/ObjectUploader";
+import type { UploadResult } from "@uppy/core";
+import { apiRequest } from "@/lib/queryClient";
 
 export function CustomizerTool() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -108,6 +111,23 @@ export function CustomizerTool() {
     }
   };
 
+  // Handle object storage upload
+  const handleGetUploadParameters = async () => {
+    const response = await apiRequest("/api/objects/upload", { method: "POST" });
+    return {
+      method: "PUT" as const,
+      url: response.uploadURL,
+    };
+  };
+
+  const handleUploadComplete = (result: UploadResult<Record<string, unknown>, Record<string, unknown>>) => {
+    if (result.successful.length > 0) {
+      const uploadURL = result.successful[0].uploadURL as string;
+      setUploadedImage(uploadURL);
+      loadImage(uploadURL);
+    }
+  };
+
   const resetFilters = () => {
     setBrightness([100]);
     setContrast([100]);
@@ -160,23 +180,39 @@ export function CustomizerTool() {
               <CardContent className="p-8">
                 <div 
                   ref={dropAreaRef}
-                  className="drag-drop-area rounded-xl p-8 text-center bg-card border-2 border-dashed border-border hover:border-primary transition-all duration-300 cursor-pointer"
+                  className="drag-drop-area rounded-xl p-8 text-center bg-card border-2 border-dashed border-border hover:border-primary transition-all duration-300"
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
-                  onClick={() => fileInputRef.current?.click()}
                   data-testid="upload-area"
                 >
                   <Upload className="w-16 h-16 text-muted-foreground mb-4 mx-auto" />
                   <h3 className="text-xl font-semibold text-foreground mb-2">Upload Your Car Photo</h3>
-                  <p className="text-muted-foreground mb-4">Drag & drop or click to select your car image</p>
-                  <Button 
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    data-testid="button-choose-file"
-                  >
-                    Choose File
-                  </Button>
-                  <p className="text-sm text-muted-foreground mt-2">Supports JPG, PNG, WebP up to 10MB</p>
+                  <p className="text-muted-foreground mb-4">Drag & drop or use the upload options below</p>
+                  
+                  <div className="flex gap-3 justify-center">
+                    <ObjectUploader
+                      maxNumberOfFiles={1}
+                      maxFileSize={10485760}
+                      onGetUploadParameters={handleGetUploadParameters}
+                      onComplete={handleUploadComplete}
+                      buttonClassName="bg-primary text-primary-foreground hover:bg-primary/90"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Cloud Upload
+                    </ObjectUploader>
+                    
+                    <Button 
+                      className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                      onClick={() => fileInputRef.current?.click()}
+                      data-testid="button-choose-file"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Quick Select
+                    </Button>
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground mt-3">Supports JPG, PNG, WebP up to 10MB</p>
                   
                   <input 
                     ref={fileInputRef}
