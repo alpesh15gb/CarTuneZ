@@ -15,7 +15,7 @@ export function HeroSection() {
       {/* Background with car video */}
       <div className="absolute inset-0 z-0">
         <video 
-          src="@assets/Untitled design_1756327982994.mp4"
+          src="/hero-video.mp4"
           autoPlay
           loop
           muted
