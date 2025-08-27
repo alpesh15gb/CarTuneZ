@@ -45,6 +45,7 @@ export function CustomizerTool() {
     const data = imageData.data;
 
     // Enhanced car color detection algorithm
+    let modifiedPixels = 0;
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
@@ -75,11 +76,11 @@ export function CustomizerTool() {
         const lDiff = Math.abs(l - targetL);
         
         // More lenient matching for car colors
-        const hTolerance = 0.15 * sensitivity; // Hue tolerance
-        const sTolerance = 0.3 * sensitivity;  // Saturation tolerance
-        const lTolerance = 0.25 * sensitivity; // Lightness tolerance
+        const hTolerance = 0.1 + (0.2 * sensitivity); // Hue tolerance (base + scaled)
+        const sTolerance = 0.2 + (0.4 * sensitivity);  // Saturation tolerance
+        const lTolerance = 0.15 + (0.3 * sensitivity); // Lightness tolerance
         
-        isCarColor = hDiff < hTolerance && sDiff < sTolerance && lDiff < lTolerance;
+        isCarColor = hDiff <= hTolerance && sDiff <= sTolerance && lDiff <= lTolerance;
       } else {
         // Fallback: broad car paint detection when no target selected
         const sensitivity = colorSensitivity[0] / 100;
@@ -96,7 +97,10 @@ export function CustomizerTool() {
 
       if (isCarColor) {
         // Apply enhanced color modifications
-        let newH = (h + hue[0] / 360) % 1;
+        let newH = (h + hue[0] / 360);
+        if (newH > 1) newH -= 1;
+        if (newH < 0) newH += 1;
+        
         let newS = Math.max(0, Math.min(1, s * (saturation[0] / 100)));
         let newL = Math.max(0, Math.min(1, l * (brightness[0] / 100)));
         
@@ -106,14 +110,18 @@ export function CustomizerTool() {
 
         const [newR, newG, newB] = hslToRgb(newH, newS, newL);
         
-        data[i] = newR;
-        data[i + 1] = newG;
-        data[i + 2] = newB;
+        data[i] = Math.round(newR);
+        data[i + 1] = Math.round(newG);
+        data[i + 2] = Math.round(newB);
+        modifiedPixels++;
       }
     }
 
     // Apply the modified image data back to canvas
     ctx.putImageData(imageData, 0, 0);
+    
+    // Debug output
+    console.log(`Modified ${modifiedPixels} pixels out of ${data.length / 4} total pixels`);
   }, [brightness, contrast, saturation, hue, colorSensitivity, targetColor]);
 
   // RGB to HSL conversion
@@ -222,8 +230,11 @@ export function CustomizerTool() {
     tempCtx.drawImage(originalImageRef.current, 0, 0);
     
     const imageData = tempCtx.getImageData(x, y, 1, 1);
-    const [r, g, b] = imageData.data;
+    const r = imageData.data[0];
+    const g = imageData.data[1];
+    const b = imageData.data[2];
     
+    console.log('Clicked pixel color:', { r, g, b });
     setTargetColor({ r, g, b });
     setShowColorPicker(true);
   }, []);
