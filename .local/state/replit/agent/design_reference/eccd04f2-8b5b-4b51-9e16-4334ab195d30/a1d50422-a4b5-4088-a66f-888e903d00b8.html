@@ -1,0 +1,1249 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarTunez - Get Your Car Rolling in Style | Premium Car Decor & Customization</title>
+    <meta name="description" content="Transform your car with premium decor, custom vinyl wraps, wheel customization, and professional automotive styling. Real-time visualization tools and expert installation.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                    chart: {
+                        "1": "var(--chart-1)",
+                        "2": "var(--chart-2)",
+                        "3": "var(--chart-3)",
+                        "4": "var(--chart-4)",
+                        "5": "var(--chart-5)",
+                    }
+                },
+                fontFamily: {
+                    sans: ["Inter", "sans-serif"],
+                }
+            },
+        }
+    };
+    </script>
+    
+    <style>
+    :root {
+        --background: hsl(0 0% 4%);
+        --foreground: hsl(0 0% 98%);
+        --card: hsl(215 28% 17%);
+        --card-foreground: hsl(0 0% 98%);
+        --popover: hsl(215 28% 17%);
+        --popover-foreground: hsl(0 0% 98%);
+        --primary: hsl(217 91% 60%);
+        --primary-foreground: hsl(0 0% 98%);
+        --secondary: hsl(215 28% 17%);
+        --secondary-foreground: hsl(0 0% 98%);
+        --muted: hsl(215 28% 17%);
+        --muted-foreground: hsl(217 10% 64%);
+        --accent: hsl(187 85% 53%);
+        --accent-foreground: hsl(0 0% 98%);
+        --destructive: hsl(0 84% 60%);
+        --destructive-foreground: hsl(0 0% 98%);
+        --border: hsl(215 28% 17%);
+        --input: hsl(215 28% 17%);
+        --ring: hsl(217 91% 60%);
+        --radius: 0.75rem;
+        
+        --chart-1: hsl(217 91% 60%);
+        --chart-2: hsl(0 84% 60%);
+        --chart-3: hsl(187 85% 53%);
+        --chart-4: hsl(142 76% 36%);
+        --chart-5: hsl(262 83% 58%);
+    }
+    
+    .before-after-slider {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .before-after-slider .after-image {
+        clip-path: inset(0 50% 0 0);
+        transition: clip-path 0.3s ease;
+    }
+    
+    .logo-glow {
+        filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, #2563eb, #ef4444);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .drag-drop-area {
+        border: 2px dashed var(--border);
+        transition: all 0.3s ease;
+    }
+    
+    .drag-drop-area.dragover {
+        border-color: var(--primary);
+        background-color: hsl(217 91% 60% / 0.1);
+    }
+    </style>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-background text-foreground antialiased">
+    
+    <!-- Navigation -->
+    <!-- @COMPONENT: Navigation [sticky header with logo and menu] -->
+    <nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <!-- CarTunez Logo Integration -->
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 relative logo-glow">
+                            <!-- Turbo with wings representation -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-red-500 rounded-full opacity-20"></div>
+                            <i class="fas fa-fan text-2xl text-blue-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                            <div class="absolute -left-2 top-1/2 transform -translate-y-1/2">
+                                <div class="w-6 h-3 bg-gradient-to-r from-blue-500 to-transparent rounded-l-full"></div>
+                            </div>
+                            <div class="absolute -right-2 top-1/2 transform -translate-y-1/2">
+                                <div class="w-6 h-3 bg-gradient-to-l from-red-500 to-transparent rounded-r-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold gradient-text">CAR TUNEZ</div>
+                            <div class="text-xs text-muted-foreground -mt-1">GET YOUR CAR ROLLING IN STYLE</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#services" class="text-foreground hover:text-primary transition-colors">Services</a>
+                    <a href="#gallery" class="text-foreground hover:text-primary transition-colors">Gallery</a>
+                    <a href="#customizer" class="text-foreground hover:text-primary transition-colors">Customizer</a>
+                    <a href="#contact" class="text-foreground hover:text-primary transition-colors">Contact</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button class="text-foreground hover:text-primary">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+    
+    <!-- Hero Section -->
+    <!-- @COMPONENT: Hero [main banner with CarTunez branding] -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background with car image -->
+        <!-- A luxury sports car with custom decals and modifications in a professional studio setting -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2000&h=1200" 
+                 alt="Luxury sports car with custom modifications" 
+                 class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/80"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="space-y-8">
+                <!-- Main Logo and Branding -->
+                <div class="space-y-4">
+                    <div class="flex justify-center">
+                        <div class="w-32 h-32 relative logo-glow float-animation">
+                            <!-- Larger hero logo -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-red-500 rounded-full opacity-30"></div>
+                            <i class="fas fa-fan text-6xl text-blue-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                            <div class="absolute -left-6 top-1/2 transform -translate-y-1/2">
+                                <div class="w-16 h-8 bg-gradient-to-r from-blue-500 to-transparent rounded-l-full"></div>
+                            </div>
+                            <div class="absolute -right-6 top-1/2 transform -translate-y-1/2">
+                                <div class="w-16 h-8 bg-gradient-to-l from-red-500 to-transparent rounded-r-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h1 class="text-5xl md:text-7xl font-bold gradient-text tracking-wide">
+                        CAR TUNEZ
+                    </h1>
+                    <p class="text-xl md:text-2xl text-accent font-medium">
+                        GET YOUR CAR ROLLING IN STYLE
+                    </p>
+                </div>
+                
+                <div class="space-y-6">
+                    <h2 class="text-3xl md:text-4xl font-bold text-foreground">
+                        Where Dream Cars Become Reality
+                    </h2>
+                    <p class="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                        Your all-in-one car customization and styling solution. Transform your vehicle with premium decor, custom vinyl wraps, and professional installations.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button class="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-play mr-2"></i>Watch Demo
+                    </button>
+                    <button class="border border-accent text-accent px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent hover:text-accent-foreground transition-all duration-300">
+                        Start Customizing
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-accent text-2xl"></i>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Hero -->
+    
+    <!-- Trust Signals -->
+    <!-- @COMPONENT: TrustSignals [partner logos and credentials] -->
+    <section class="py-12 bg-card/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold text-foreground">Trusted by Car Enthusiasts Worldwide</h3>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center opacity-60">
+                <!-- Partner logos would go here - using placeholders -->
+                <div class="flex justify-center">
+                    <div class="text-center">
+                        <i class="fab fa-3m text-3xl text-muted-foreground mb-2"></i>
+                        <p class="text-sm text-muted-foreground">3M</p>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-car text-3xl text-muted-foreground mb-2"></i>
+                        <p class="text-sm text-muted-foreground">Avery</p>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-layer-group text-3xl text-muted-foreground mb-2"></i>
+                        <p class="text-sm text-muted-foreground">ORACAL</p>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-award text-3xl text-muted-foreground mb-2"></i>
+                        <p class="text-sm text-muted-foreground">KPMF</p>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-shield-alt text-3xl text-muted-foreground mb-2"></i>
+                        <p class="text-sm text-muted-foreground">Hexis</p>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-star text-3xl text-muted-foreground mb-2"></i>
+                        <p class="text-sm text-muted-foreground">Premium</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: TrustSignals -->
+    
+    <!-- Interactive Customizer Tool -->
+    <!-- @COMPONENT: Customizer [real-time car customization interface] -->
+    <section id="customizer" class="py-20 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    Real-Time Car Customizer
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Upload your car photo and instantly visualize custom decor, colors, and modifications
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 items-start">
+                <!-- Upload Area -->
+                <div class="space-y-6">
+                    <div class="drag-drop-area rounded-xl p-8 text-center bg-card border-2 border-dashed border-border hover:border-primary transition-all duration-300 cursor-pointer"
+                         data-implementation="Implement drag-and-drop file upload with image preview">
+                        <i class="fas fa-cloud-upload-alt text-6xl text-muted-foreground mb-4"></i>
+                        <h3 class="text-xl font-semibold text-foreground mb-2">Upload Your Car Photo</h3>
+                        <p class="text-muted-foreground mb-4">Drag & drop or click to select your car image</p>
+                        <button class="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                            Choose File
+                        </button>
+                        <p class="text-sm text-muted-foreground mt-2">Supports JPG, PNG, WebP up to 10MB</p>
+                    </div>
+                    
+                    <!-- Color Picker Tools -->
+                    <div class="bg-card rounded-xl p-6 space-y-4">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Customization Tools</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Body Color</label>
+                                <div class="flex gap-2">
+                                    <input type="color" value="#2563eb" class="w-12 h-12 rounded-lg border border-border cursor-pointer" data-implementation="Color picker for car body">
+                                    <input type="color" value="#ef4444" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                    <input type="color" value="#10b981" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                    <input type="color" value="#f59e0b" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                    <input type="color" value="#8b5cf6" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Wheel Color</label>
+                                <div class="flex gap-2">
+                                    <input type="color" value="#000000" class="w-12 h-12 rounded-lg border border-border cursor-pointer" data-implementation="Color picker for wheels">
+                                    <input type="color" value="#ffffff" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                    <input type="color" value="#6b7280" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                    <input type="color" value="#fbbf24" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                    <input type="color" value="#dc2626" class="w-12 h-12 rounded-lg border border-border cursor-pointer">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Decor Style</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">Racing Stripes</button>
+                                    <button class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">Carbon Fiber</button>
+                                    <button class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">Flame Design</button>
+                                    <button class="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">Tribal Pattern</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preview Area -->
+                <div class="space-y-6">
+                    <div class="bg-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Live Preview</h3>
+                        <!-- Placeholder for car customization preview -->
+                        <!-- A sleek sports car in a studio setting ready for customization visualization -->
+                        <div class="relative rounded-lg overflow-hidden bg-secondary" data-implementation="Canvas-based image manipulation area">
+                            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                                 alt="Sports car ready for customization visualization" 
+                                 class="w-full h-auto" />
+                            <div class="absolute inset-0 bg-primary/10 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <p class="text-white font-semibold">Click to customize</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 flex gap-2">
+                            <button class="flex-1 bg-primary text-primary-foreground py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                                <i class="fas fa-download mr-2"></i>Download
+                            </button>
+                            <button class="flex-1 bg-accent text-accent-foreground py-2 rounded-lg hover:bg-accent/90 transition-colors">
+                                <i class="fas fa-share mr-2"></i>Share
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-card rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-primary">500+</div>
+                            <div class="text-sm text-muted-foreground">Customizations</div>
+                        </div>
+                        <div class="bg-card rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-accent">24h</div>
+                            <div class="text-sm text-muted-foreground">Turnaround</div>
+                        </div>
+                        <div class="bg-card rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-destructive">100%</div>
+                            <div class="text-sm text-muted-foreground">Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Customizer -->
+    
+    <!-- Before/After Showcase -->
+    <!-- @COMPONENT: BeforeAfter [slider showing transformations] -->
+    <section class="py-20 bg-card/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    Amazing Transformations
+                </h2>
+                <p class="text-xl text-muted-foreground">
+                    See the incredible before and after results of our car customizations
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Before/After Slider 1 -->
+                <div class="space-y-4">
+                    <div class="relative before-after-slider rounded-xl overflow-hidden" data-implementation="Interactive before/after slider">
+                        <!-- A regular sedan car before customization in natural lighting -->
+                        <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                             alt="Regular sedan car before customization" 
+                             class="w-full h-auto" />
+                        <!-- The same sedan with custom racing stripes and modified appearance -->
+                        <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                             alt="Sedan with custom racing stripes and modifications" 
+                             class="absolute inset-0 w-full h-auto after-image" />
+                        
+                        <!-- Slider control -->
+                        <div class="absolute inset-y-0 left-1/2 transform -translate-x-1/2 w-1 bg-white cursor-col-resize">
+                            <div class="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
+                                <i class="fas fa-arrows-alt-h text-gray-700 text-sm"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Labels -->
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">Before</div>
+                        <div class="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">After</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold text-foreground">Racing Stripe Package</h3>
+                        <p class="text-muted-foreground">Complete transformation with custom racing stripes and accent colors</p>
+                    </div>
+                </div>
+                
+                <!-- Before/After Slider 2 -->
+                <div class="space-y-4">
+                    <div class="relative before-after-slider rounded-xl overflow-hidden" data-implementation="Interactive before/after slider">
+                        <!-- An SUV before modification in standard configuration -->
+                        <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                             alt="SUV before modification in standard configuration" 
+                             class="w-full h-auto" />
+                        <!-- The same SUV with complete custom wrap and wheel modifications -->
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                             alt="SUV with complete custom wrap and wheel modifications" 
+                             class="absolute inset-0 w-full h-auto after-image" />
+                        
+                        <!-- Slider control -->
+                        <div class="absolute inset-y-0 left-1/2 transform -translate-x-1/2 w-1 bg-white cursor-col-resize">
+                            <div class="absolute top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
+                                <i class="fas fa-arrows-alt-h text-gray-700 text-sm"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Labels -->
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-medium">Before</div>
+                        <div class="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">After</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold text-foreground">Full Wrap Transformation</h3>
+                        <p class="text-muted-foreground">Complete vehicle wrap with custom wheels and detailing</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="text-center mt-12">
+                <button class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-primary/90 hover:to-accent/90 transition-all duration-300 transform hover:scale-105">
+                    See More Transformations
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: BeforeAfter -->
+    
+    <!-- Services Section -->
+    <!-- @COMPONENT: Services [car customization services offered] -->
+    <section id="services" class="py-20 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    Complete Customization Services
+                </h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    From subtle enhancements to complete transformations, we offer every service to make your car unique
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1: Vinyl Wraps -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-all duration-300 transform hover:scale-105 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-layer-group text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">Vinyl Wraps & Films</h3>
+                    <p class="text-muted-foreground mb-4">Premium quality vinyl wraps in hundreds of colors and finishes including matte, gloss, satin, and carbon fiber textures.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Full vehicle wraps</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Partial wraps & accents</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>3M & Avery Dennison films</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 2: Wheel Customization -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-all duration-300 transform hover:scale-105 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-accent to-destructive rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-circle-notch text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">Wheel Customization</h3>
+                    <p class="text-muted-foreground mb-4">Transform your wheels with custom colors, finishes, and protective coatings for both style and durability.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Powder coating</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Custom paint jobs</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Protective ceramic coatings</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 3: Racing Stripes -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-all duration-300 transform hover:scale-105 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-destructive to-primary rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-road text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">Racing Stripes & Decals</h3>
+                    <p class="text-muted-foreground mb-4">Classic racing stripes, custom graphics, and performance-inspired decals to give your car that competitive edge.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Classic racing stripes</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Custom graphics design</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Performance decals</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 4: Paint Protection -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-all duration-300 transform hover:scale-105 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-chart-4 to-chart-2 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-shield-alt text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">Paint Protection Film</h3>
+                    <p class="text-muted-foreground mb-4">Invisible protection that preserves your car's finish while maintaining its original appearance and value.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Clear protective film</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Self-healing technology</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>10-year warranty</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 5: Window Tinting -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-all duration-300 transform hover:scale-105 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-chart-5 to-chart-1 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-tint text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">Window Tinting</h3>
+                    <p class="text-muted-foreground mb-4">Professional window tinting for privacy, UV protection, and enhanced style with various tint levels available.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Ceramic tint films</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>UV & heat protection</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Lifetime warranty</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 6: Custom Design -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-all duration-300 transform hover:scale-105 group">
+                    <div class="w-16 h-16 bg-gradient-to-br from-chart-3 to-chart-4 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-paint-brush text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-foreground mb-2">Custom Design Studio</h3>
+                    <p class="text-muted-foreground mb-4">Work with our designers to create completely unique graphics, patterns, and styling that reflects your personality.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>One-on-one consultation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>3D mockups included</li>
+                        <li class="flex items-center"><i class="fas fa-check text-accent mr-2"></i>Unlimited revisions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Services -->
+    
+    <!-- Gallery Section -->
+    <!-- @COMPONENT: Gallery [showcase of completed projects] -->
+    <section id="gallery" class="py-20 bg-card/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    Our Work Gallery
+                </h2>
+                <p class="text-xl text-muted-foreground">
+                    Explore our portfolio of stunning car transformations
+                </p>
+            </div>
+            
+            <!-- Gallery Filter -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="px-6 py-2 rounded-full bg-primary text-primary-foreground font-medium" data-filter="all">All Projects</button>
+                <button class="px-6 py-2 rounded-full bg-secondary text-secondary-foreground font-medium hover:bg-primary hover:text-primary-foreground transition-colors" data-filter="wraps">Wraps</button>
+                <button class="px-6 py-2 rounded-full bg-secondary text-secondary-foreground font-medium hover:bg-primary hover:text-primary-foreground transition-colors" data-filter="wheels">Wheels</button>
+                <button class="px-6 py-2 rounded-full bg-secondary text-secondary-foreground font-medium hover:bg-primary hover:text-primary-foreground transition-colors" data-filter="stripes">Stripes</button>
+                <button class="px-6 py-2 rounded-full bg-secondary text-secondary-foreground font-medium hover:bg-primary hover:text-primary-foreground transition-colors" data-filter="custom">Custom</button>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-implementation="Filterable image gallery">
+                <!-- Gallery Item 1 -->
+                <div class="group cursor-pointer" data-category="wraps">
+                    <!-- A sports car with a striking chrome wrap finish in a professional setting -->
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" 
+                             alt="Sports car with striking chrome wrap finish" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="font-semibold">Chrome Wrap Package</h3>
+                                <p class="text-sm opacity-90">Lamborghini Huracán</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-expand-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 2 -->
+                <div class="group cursor-pointer" data-category="wheels">
+                    <!-- Custom painted wheels in bright blue with chrome accents -->
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://pixabay.com/get/g1c10f39d3d9dcd0bcacdbafdde1907b53b6a523e3da16d1eb0df66733f7c064eac44e959a39f1966db4fb0fe0353faefc7e92ba252c425cb72562f4d3f74052c_1280.jpg" 
+                             alt="Custom painted wheels in bright blue with chrome accents" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="font-semibold">Custom Wheel Paint</h3>
+                                <p class="text-sm opacity-90">BMW M3 Wheels</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-expand-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 3 -->
+                <div class="group cursor-pointer" data-category="stripes">
+                    <!-- A muscle car with classic racing stripes down the center -->
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" 
+                             alt="Muscle car with classic racing stripes down the center" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="font-semibold">Racing Stripes</h3>
+                                <p class="text-sm opacity-90">Ford Mustang GT</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-expand-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 4 -->
+                <div class="group cursor-pointer" data-category="custom">
+                    <!-- A car with custom flame graphics and artistic design elements -->
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" 
+                             alt="Car with custom flame graphics and artistic design elements" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="font-semibold">Custom Graphics</h3>
+                                <p class="text-sm opacity-90">Chevrolet Camaro</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-expand-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 5 -->
+                <div class="group cursor-pointer" data-category="wraps">
+                    <!-- A luxury sedan with matte black wrap and red accents -->
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" 
+                             alt="Luxury sedan with matte black wrap and red accents" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="font-semibold">Matte Black Wrap</h3>
+                                <p class="text-sm opacity-90">Mercedes-Benz S-Class</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-expand-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 6 -->
+                <div class="group cursor-pointer" data-category="wheels">
+                    <!-- Close-up of custom forged wheels with intricate spoke design -->
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400" 
+                             alt="Close-up of custom forged wheels with intricate spoke design" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h3 class="font-semibold">Forged Wheels</h3>
+                                <p class="text-sm opacity-90">Custom 20" Set</p>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <i class="fas fa-expand-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button class="bg-secondary text-secondary-foreground px-8 py-3 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">
+                    Load More Projects
+                    <i class="fas fa-chevron-down ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Gallery -->
+    
+    <!-- Testimonials -->
+    <!-- @COMPONENT: Testimonials [customer reviews and feedback] -->
+    <section class="py-20 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    What Our Customers Say
+                </h2>
+                <p class="text-xl text-muted-foreground">
+                    Real reviews from satisfied car enthusiasts
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-muted-foreground">5.0</span>
+                    </div>
+                    <blockquote class="text-foreground mb-4">
+                        "CarTunez transformed my BMW with an incredible matte black wrap. The attention to detail and quality is unmatched. I get compliments everywhere I go!"
+                    </blockquote>
+                    <div class="flex items-center">
+                        <!-- Professional headshot of a satisfied customer -->
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=64&h=64" 
+                             alt="Professional headshot of satisfied customer" 
+                             class="w-12 h-12 rounded-full object-cover mr-3" />
+                        <div>
+                            <div class="font-semibold text-foreground" data-mock="true">Michael Rodriguez</div>
+                            <div class="text-sm text-muted-foreground">BMW M3 Owner</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-muted-foreground">5.0</span>
+                    </div>
+                    <blockquote class="text-foreground mb-4">
+                        "The real-time customization tool is amazing! I could see exactly how my car would look before committing. The final result exceeded my expectations."
+                    </blockquote>
+                    <div class="flex items-center">
+                        <!-- Professional headshot of a female customer -->
+                        <img src="https://pixabay.com/get/ge9c8af6cf4e5f6cfebe7c45d48758b6372c4d421f44329a190090917a5f8d8fc0632ec83b22445c25679c93780f68e112db728fa89365a7fa9267b5e1932597d_1280.jpg" 
+                             alt="Professional headshot of female customer" 
+                             class="w-12 h-12 rounded-full object-cover mr-3" />
+                        <div>
+                            <div class="font-semibold text-foreground" data-mock="true">Sarah Johnson</div>
+                            <div class="text-sm text-muted-foreground">Tesla Model S Owner</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-card rounded-xl p-6 hover:bg-card/80 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="ml-2 text-muted-foreground">5.0</span>
+                    </div>
+                    <blockquote class="text-foreground mb-4">
+                        "Professional service from start to finish. The racing stripes on my Mustang look perfect, and the installation was flawless. Highly recommended!"
+                    </blockquote>
+                    <div class="flex items-center">
+                        <!-- Professional headshot of another satisfied customer -->
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=64&h=64" 
+                             alt="Professional headshot of satisfied customer" 
+                             class="w-12 h-12 rounded-full object-cover mr-3" />
+                        <div>
+                            <div class="font-semibold text-foreground" data-mock="true">David Chen</div>
+                            <div class="text-sm text-muted-foreground">Ford Mustang GT Owner</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-primary mb-2">500+</div>
+                    <div class="text-muted-foreground">Cars Transformed</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-accent mb-2">99%</div>
+                    <div class="text-muted-foreground">Customer Satisfaction</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-destructive mb-2">24h</div>
+                    <div class="text-muted-foreground">Average Turnaround</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-bold text-chart-4 mb-2">5★</div>
+                    <div class="text-muted-foreground">Average Rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Testimonials -->
+    
+    <!-- Contact Section -->
+    <!-- @COMPONENT: Contact [contact form and information] -->
+    <section id="contact" class="py-20 bg-card/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                    Get Your Quote Today
+                </h2>
+                <p class="text-xl text-muted-foreground">
+                    Ready to transform your car? Contact us for a free consultation and quote
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="bg-card rounded-xl p-8">
+                    <h3 class="text-2xl font-bold text-foreground mb-6">Send Us a Message</h3>
+                    
+                    <form class="space-y-6" data-implementation="Contact form with validation">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">First Name</label>
+                                <input type="text" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="John" data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Last Name</label>
+                                <input type="text" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="Doe" data-mock="true">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Email Address</label>
+                            <input type="email" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="john@example.com" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Phone Number</label>
+                            <input type="tel" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="(555) 123-4567" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Vehicle Make & Model</label>
+                            <input type="text" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="BMW M3, Tesla Model S, etc." data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Service Interested In</label>
+                            <select class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground focus:ring-2 focus:ring-ring focus:border-transparent">
+                                <option>Select a service...</option>
+                                <option>Vinyl Wraps & Films</option>
+                                <option>Wheel Customization</option>
+                                <option>Racing Stripes & Decals</option>
+                                <option>Paint Protection Film</option>
+                                <option>Window Tinting</option>
+                                <option>Custom Design Studio</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-foreground mb-2">Project Details</label>
+                            <textarea rows="4" class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="Tell us about your vision for your car..." data-mock="true"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-accent text-white py-4 rounded-lg font-semibold text-lg hover:from-primary/90 hover:to-accent/90 transition-all duration-300 transform hover:scale-105">
+                            Get Free Quote
+                            <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <!-- Location -->
+                    <div class="bg-card rounded-xl p-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-map-marker-alt text-xl text-primary-foreground"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-foreground mb-2">Visit Our Shop</h3>
+                                <p class="text-muted-foreground" data-mock="true">
+                                    123 Custom Car Lane<br>
+                                    Auto District, NY 10001<br>
+                                    United States
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Phone -->
+                    <div class="bg-card rounded-xl p-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-phone text-xl text-accent-foreground"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-foreground mb-2">Call Us</h3>
+                                <p class="text-muted-foreground" data-mock="true">
+                                    Phone: (555) CAR-TUNE<br>
+                                    Mobile: (555) 227-8863<br>
+                                    <span class="text-sm">Mon-Fri 8AM-6PM, Sat 9AM-4PM</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="bg-card rounded-xl p-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-destructive rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-envelope text-xl text-destructive-foreground"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-foreground mb-2">Email Us</h3>
+                                <p class="text-muted-foreground" data-mock="true">
+                                    info@cartunez.com<br>
+                                    quotes@cartunez.com<br>
+                                    <span class="text-sm">We respond within 2 hours</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Media -->
+                    <div class="bg-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-foreground mb-4">Follow Us</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground hover:bg-primary/90 transition-colors">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center text-accent-foreground hover:bg-accent/90 transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-chart-5 rounded-lg flex items-center justify-center text-white hover:bg-chart-5/90 transition-colors">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-chart-1 rounded-lg flex items-center justify-center text-white hover:bg-chart-1/90 transition-colors">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Contact -->
+    
+    <!-- Footer -->
+    <!-- @COMPONENT: Footer [site footer with links and info] -->
+    <footer class="bg-card border-t border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 relative logo-glow">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-red-500 rounded-full opacity-20"></div>
+                            <i class="fas fa-fan text-xl text-blue-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                            <div class="absolute -left-1.5 top-1/2 transform -translate-y-1/2">
+                                <div class="w-4 h-2 bg-gradient-to-r from-blue-500 to-transparent rounded-l-full"></div>
+                            </div>
+                            <div class="absolute -right-1.5 top-1/2 transform -translate-y-1/2">
+                                <div class="w-4 h-2 bg-gradient-to-l from-red-500 to-transparent rounded-r-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-lg font-bold gradient-text">CAR TUNEZ</div>
+                            <div class="text-xs text-muted-foreground -mt-1">GET YOUR CAR ROLLING IN STYLE</div>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground text-sm mb-4">
+                        Premium car customization and styling services. Transform your vehicle with our expert craftsmanship and cutting-edge technology.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-facebook text-lg"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-accent transition-colors">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-chart-5 transition-colors">
+                            <i class="fab fa-youtube text-lg"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-chart-1 transition-colors">
+                            <i class="fab fa-tiktok text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Services -->
+                <div>
+                    <h3 class="font-semibold text-foreground mb-4">Services</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Vinyl Wraps & Films</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Wheel Customization</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Racing Stripes & Decals</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Paint Protection Film</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Window Tinting</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Custom Design Studio</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Company -->
+                <div>
+                    <h3 class="font-semibold text-foreground mb-4">Company</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Our Team</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Gallery</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Testimonials</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Support -->
+                <div>
+                    <h3 class="font-semibold text-foreground mb-4">Support</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Warranty</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Care Instructions</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Financing Options</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-muted-foreground text-sm">
+                    © 2024 CarTunez. All rights reserved.
+                </p>
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <span class="text-muted-foreground text-sm">Built with precision and passion</span>
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-heart text-destructive"></i>
+                        <span class="text-muted-foreground text-sm">by CarTunez Team</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+    
+    <!-- JavaScript for interactivity -->
+    <script>
+    (function() {
+        // TODO: Implement business logic, API calls, or state management
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Before/After slider functionality
+        document.querySelectorAll('.before-after-slider').forEach(slider => {
+            const control = slider.querySelector('.cursor-col-resize');
+            const afterImage = slider.querySelector('.after-image');
+            
+            if (control && afterImage) {
+                let isDragging = false;
+                
+                control.addEventListener('mousedown', () => isDragging = true);
+                document.addEventListener('mouseup', () => isDragging = false);
+                
+                slider.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    
+                    const rect = slider.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const percentage = (x / rect.width) * 100;
+                    const clampedPercentage = Math.max(0, Math.min(100, percentage));
+                    
+                    afterImage.style.clipPath = `inset(0 ${100 - clampedPercentage}% 0 0)`;
+                    control.style.left = `${clampedPercentage}%`;
+                });
+            }
+        });
+        
+        // Drag and drop functionality for file upload
+        document.querySelectorAll('.drag-drop-area').forEach(area => {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                area.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                area.addEventListener(eventName, () => area.classList.add('dragover'), false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                area.addEventListener(eventName, () => area.classList.remove('dragover'), false);
+            });
+            
+            area.addEventListener('drop', handleDrop, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            // TODO: Handle file upload and preview
+            console.log('Files dropped:', files);
+        }
+        
+        // Gallery filter functionality
+        const filterButtons = document.querySelectorAll('[data-filter]');
+        const galleryItems = document.querySelectorAll('[data-category]');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filter = button.getAttribute('data-filter');
+                
+                // Update active button
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-primary-foreground');
+                    btn.classList.add('bg-secondary', 'text-secondary-foreground');
+                });
+                button.classList.remove('bg-secondary', 'text-secondary-foreground');
+                button.classList.add('bg-primary', 'text-primary-foreground');
+                
+                // Filter items
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Color picker functionality for customizer
+        document.querySelectorAll('input[type="color"]').forEach(picker => {
+            picker.addEventListener('change', (e) => {
+                // TODO: Apply color changes to preview image using canvas manipulation
+                console.log('Color changed to:', e.target.value);
+            });
+        });
+        
+        // Mobile menu toggle (if needed)
+        const mobileMenuButton = document.querySelector('.md\\:hidden button');
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                // TODO: Implement mobile menu toggle
+                console.log('Mobile menu toggle clicked');
+            });
+        }
+        
+        // Form submission handling
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // TODO: Implement form validation and submission
+                console.log('Form submitted');
+            });
+        });
+        
+    })();
+    </script>
+</body>
+</html>
