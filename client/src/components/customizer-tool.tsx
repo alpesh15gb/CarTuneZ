@@ -1,25 +1,73 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, Download, Share2 } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Upload, Download, Share2, RotateCcw } from "lucide-react";
 
 export function CustomizerTool() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [bodyColor, setBodyColor] = useState("#2563eb");
   const [wheelColor, setWheelColor] = useState("#000000");
   const [decorStyle, setDecorStyle] = useState<string>("");
+  const [brightness, setBrightness] = useState([100]);
+  const [contrast, setContrast] = useState([100]);
+  const [saturation, setSaturation] = useState([100]);
+  const [hue, setHue] = useState([0]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropAreaRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const originalImageRef = useRef<HTMLImageElement | null>(null);
+
+  // Apply filters to image
+  const applyFilters = useCallback(() => {
+    if (!originalImageRef.current || !canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = originalImageRef.current;
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Apply CSS-style filters
+    ctx.filter = `
+      brightness(${brightness[0]}%) 
+      contrast(${contrast[0]}%) 
+      saturate(${saturation[0]}%) 
+      hue-rotate(${hue[0]}deg)
+    `;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+  }, [brightness, contrast, saturation, hue]);
 
   const handleFileUpload = useCallback((file: File) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setUploadedImage(e.target?.result as string);
+        const result = e.target?.result as string;
+        setUploadedImage(result);
+        
+        // Load image for canvas processing
+        const img = new Image();
+        img.onload = () => {
+          originalImageRef.current = img;
+          applyFilters();
+        };
+        img.crossOrigin = "anonymous";
+        img.src = result;
       };
       reader.readAsDataURL(file);
     }
-  }, []);
+  }, [applyFilters]);
+
+  // Apply filters whenever settings change
+  useEffect(() => {
+    if (uploadedImage && originalImageRef.current) {
+      applyFilters();
+    }
+  }, [brightness, contrast, saturation, hue, applyFilters]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -60,12 +108,28 @@ export function CustomizerTool() {
     }
   };
 
+  const resetFilters = () => {
+    setBrightness([100]);
+    setContrast([100]);
+    setSaturation([100]);
+    setHue([0]);
+  };
+
+  const downloadImage = () => {
+    if (!canvasRef.current) return;
+    
+    const link = document.createElement('a');
+    link.download = 'customized-car.png';
+    link.href = canvasRef.current.toDataURL();
+    link.click();
+  };
+
   const colorPresets = [
-    { body: "#2563eb", wheel: "#000000", name: "Classic Blue" },
-    { body: "#ef4444", wheel: "#ffffff", name: "Racing Red" },
-    { body: "#10b981", wheel: "#6b7280", name: "Forest Green" },
-    { body: "#f59e0b", wheel: "#fbbf24", name: "Solar Yellow" },
-    { body: "#8b5cf6", wheel: "#dc2626", name: "Royal Purple" },
+    { body: "#2563eb", wheel: "#000000", name: "Classic Blue", hue: 220 },
+    { body: "#ef4444", wheel: "#ffffff", name: "Racing Red", hue: 0 },
+    { body: "#10b981", wheel: "#6b7280", name: "Forest Green", hue: 150 },
+    { body: "#f59e0b", wheel: "#fbbf24", name: "Solar Yellow", hue: 45 },
+    { body: "#8b5cf6", wheel: "#dc2626", name: "Royal Purple", hue: 270 },
   ];
 
   const decorStyles = [
@@ -126,62 +190,106 @@ export function CustomizerTool() {
               </CardContent>
             </Card>
             
-            {/* Color Picker Tools */}
+            {/* Real-Time Modification Tools */}
             <Card>
               <CardContent className="p-6 space-y-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4" data-testid="customization-tools-title">
-                  Customization Tools
-                </h3>
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-semibold text-foreground" data-testid="customization-tools-title">
+                    Real-Time Modifications
+                  </h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={resetFilters}
+                    data-testid="button-reset-filters"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Reset
+                  </Button>
+                </div>
                 
                 <div className="space-y-6">
+                  {/* Color Presets */}
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-3">Body Color</label>
+                    <label className="block text-sm font-medium text-foreground mb-3">Quick Color Themes</label>
                     <div className="flex gap-2 flex-wrap">
                       {colorPresets.map((preset, index) => (
                         <button
                           key={index}
-                          onClick={() => setBodyColor(preset.body)}
+                          onClick={() => setHue([preset.hue])}
                           className={`w-12 h-12 rounded-lg border-2 transition-all duration-200 ${
-                            bodyColor === preset.body ? 'border-primary scale-110' : 'border-border hover:scale-105'
+                            Math.abs(hue[0] - preset.hue) < 10 ? 'border-primary scale-110' : 'border-border hover:scale-105'
                           }`}
                           style={{ backgroundColor: preset.body }}
                           title={preset.name}
-                          data-testid={`color-preset-body-${index}`}
+                          data-testid={`color-preset-${index}`}
                         />
                       ))}
-                      <input 
-                        type="color" 
-                        value={bodyColor} 
-                        onChange={(e) => setBodyColor(e.target.value)}
-                        className="w-12 h-12 rounded-lg border border-border cursor-pointer"
-                        data-testid="color-picker-body"
-                      />
                     </div>
                   </div>
-                  
+
+                  {/* Hue Adjustment */}
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-3">Wheel Color</label>
-                    <div className="flex gap-2 flex-wrap">
-                      {colorPresets.map((preset, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setWheelColor(preset.wheel)}
-                          className={`w-12 h-12 rounded-lg border-2 transition-all duration-200 ${
-                            wheelColor === preset.wheel ? 'border-primary scale-110' : 'border-border hover:scale-105'
-                          }`}
-                          style={{ backgroundColor: preset.wheel }}
-                          title={`${preset.name} Wheels`}
-                          data-testid={`color-preset-wheel-${index}`}
-                        />
-                      ))}
-                      <input 
-                        type="color" 
-                        value={wheelColor} 
-                        onChange={(e) => setWheelColor(e.target.value)}
-                        className="w-12 h-12 rounded-lg border border-border cursor-pointer"
-                        data-testid="color-picker-wheel"
-                      />
-                    </div>
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                      Color Hue: {hue[0]}°
+                    </label>
+                    <Slider
+                      value={hue}
+                      onValueChange={setHue}
+                      max={360}
+                      min={0}
+                      step={1}
+                      className="w-full"
+                      data-testid="slider-hue"
+                    />
+                  </div>
+
+                  {/* Brightness Adjustment */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                      Brightness: {brightness[0]}%
+                    </label>
+                    <Slider
+                      value={brightness}
+                      onValueChange={setBrightness}
+                      max={200}
+                      min={50}
+                      step={5}
+                      className="w-full"
+                      data-testid="slider-brightness"
+                    />
+                  </div>
+
+                  {/* Contrast Adjustment */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                      Contrast: {contrast[0]}%
+                    </label>
+                    <Slider
+                      value={contrast}
+                      onValueChange={setContrast}
+                      max={200}
+                      min={50}
+                      step={5}
+                      className="w-full"
+                      data-testid="slider-contrast"
+                    />
+                  </div>
+
+                  {/* Saturation Adjustment */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                      Saturation: {saturation[0]}%
+                    </label>
+                    <Slider
+                      value={saturation}
+                      onValueChange={setSaturation}
+                      max={200}
+                      min={0}
+                      step={5}
+                      className="w-full"
+                      data-testid="slider-saturation"
+                    />
                   </div>
                   
                   <div>
@@ -209,41 +317,73 @@ export function CustomizerTool() {
           <div className="space-y-6">
             <Card>
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-foreground mb-4" data-testid="preview-title">Live Preview</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-4" data-testid="preview-title">
+                  Real-Time Preview
+                </h3>
                 <div className="relative rounded-lg overflow-hidden bg-secondary" data-testid="preview-area">
                   {uploadedImage ? (
                     <div className="relative">
-                      <img 
-                        src={uploadedImage} 
-                        alt="Uploaded car for customization" 
+                      <canvas
+                        ref={canvasRef}
                         className="w-full h-auto max-h-96 object-contain"
-                        data-testid="uploaded-image"
+                        data-testid="processed-image"
+                        style={{ display: originalImageRef.current ? 'block' : 'none' }}
                       />
-                      {/* Color overlay simulation */}
-                      <div 
-                        className="absolute inset-0 mix-blend-color opacity-30"
-                        style={{ backgroundColor: bodyColor }}
-                        data-testid="color-overlay"
-                      />
+                      {!originalImageRef.current && (
+                        <img 
+                          src={uploadedImage} 
+                          alt="Loading..." 
+                          className="w-full h-auto max-h-96 object-contain opacity-50"
+                          data-testid="loading-image"
+                        />
+                      )}
+                      
+                      {/* Decor Style Overlay */}
+                      {decorStyle && (
+                        <div className="absolute top-4 left-4 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                          {decorStyle} Applied
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className="aspect-video bg-secondary flex items-center justify-center">
-                      <img 
-                        src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
-                        alt="Default car for customization preview" 
-                        className="w-full h-full object-cover"
-                        data-testid="default-preview-image"
-                      />
+                    <div className="aspect-video bg-secondary flex flex-col items-center justify-center space-y-4">
+                      <div className="text-center">
+                        <Upload className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                        <h4 className="text-lg font-medium text-foreground">Upload an image to get started</h4>
+                        <p className="text-muted-foreground">See real-time color and style modifications</p>
+                      </div>
                     </div>
                   )}
                 </div>
                 
+                {/* Settings Display */}
+                {uploadedImage && (
+                  <div className="mt-4 p-3 bg-muted rounded-lg">
+                    <div className="text-sm text-muted-foreground grid grid-cols-2 gap-2">
+                      <div>Hue: {hue[0]}°</div>
+                      <div>Brightness: {brightness[0]}%</div>
+                      <div>Contrast: {contrast[0]}%</div>
+                      <div>Saturation: {saturation[0]}%</div>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="mt-4 flex gap-2">
-                  <Button className="flex-1" data-testid="button-download">
+                  <Button 
+                    className="flex-1" 
+                    onClick={downloadImage}
+                    disabled={!uploadedImage}
+                    data-testid="button-download"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Download
                   </Button>
-                  <Button variant="secondary" className="flex-1" data-testid="button-share">
+                  <Button 
+                    variant="secondary" 
+                    className="flex-1"
+                    disabled={!uploadedImage}
+                    data-testid="button-share"
+                  >
                     <Share2 className="w-4 h-4 mr-2" />
                     Share
                   </Button>
