@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --card: hsl(215, 28%, 17%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --popover: hsl(215, 28%, 17%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --primary: hsl(217, 91%, 60%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(215, 28%, 17%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --muted: hsl(215, 28%, 17%);
+  --muted-foreground: hsl(217, 10%, 64%);
+  --accent: hsl(187, 85%, 53%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(215, 28%, 17%);
+  --input: hsl(215, 28%, 17%);
+  --ring: hsl(217, 91%, 60%);
+  --chart-1: hsl(217, 91%, 60%);
+  --chart-2: hsl(0, 84%, 60%);
+  --chart-3: hsl(187, 85%, 53%);
+  --chart-4: hsl(142, 76%, 36%);
+  --chart-5: hsl(262, 83%, 58%);
+  --sidebar: hsl(215, 28%, 17%);
+  --sidebar-foreground: hsl(0, 0%, 98%);
+  --sidebar-primary: hsl(217, 91%, 60%);
+  --sidebar-primary-foreground: hsl(0, 0%, 98%);
+  --sidebar-accent: hsl(187, 85%, 53%);
+  --sidebar-accent-foreground: hsl(0, 0%, 98%);
+  --sidebar-border: hsl(215, 28%, 17%);
+  --sidebar-ring: hsl(217, 91%, 60%);
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: hsl(0, 0%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --card: hsl(215, 28%, 17%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --popover: hsl(215, 28%, 17%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --primary: hsl(217, 91%, 60%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(215, 28%, 17%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --muted: hsl(215, 28%, 17%);
+  --muted-foreground: hsl(217, 10%, 64%);
+  --accent: hsl(187, 85%, 53%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(215, 28%, 17%);
+  --input: hsl(215, 28%, 17%);
+  --ring: hsl(217, 91%, 60%);
+  --chart-1: hsl(217, 91%, 60%);
+  --chart-2: hsl(0, 84%, 60%);
+  --chart-3: hsl(187, 85%, 53%);
+  --chart-4: hsl(142, 76%, 36%);
+  --chart-5: hsl(262, 83%, 58%);
+  --sidebar: hsl(215, 28%, 17%);
+  --sidebar-foreground: hsl(0, 0%, 98%);
+  --sidebar-primary: hsl(217, 91%, 60%);
+  --sidebar-primary-foreground: hsl(0, 0%, 98%);
+  --sidebar-accent: hsl(187, 85%, 53%);
+  --sidebar-accent-foreground: hsl(0, 0%, 98%);
+  --sidebar-border: hsl(215, 28%, 17%);
+  --sidebar-ring: hsl(217, 91%, 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .logo-glow {
+    filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #2563eb, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .before-after-slider {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .before-after-slider .after-image {
+    clip-path: inset(0 50% 0 0);
+    transition: clip-path 0.3s ease;
+  }
+  
+  .drag-drop-area {
+    border: 2px dashed var(--border);
+    transition: all 0.3s ease;
+  }
+  
+  .drag-drop-area.dragover {
+    border-color: var(--primary);
+    background-color: hsl(217 91% 60% / 0.1);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+}
